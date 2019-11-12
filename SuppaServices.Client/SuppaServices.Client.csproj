@@ -6,11 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.DynamicClient.Grace" Version="3.0.1" />
+    <PackageReference Include="EasyRpc.DynamicClient.Grace" Version="3.0.2-RC1099" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SuppaServices.Interfaces\SuppaServices.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="sample.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

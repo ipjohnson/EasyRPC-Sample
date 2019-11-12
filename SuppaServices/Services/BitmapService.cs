@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using SuppaServices.Interfaces;
-using SuppaServices.Services;
 
 namespace SuppaServices.Server.Services
 {

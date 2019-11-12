@@ -25,20 +25,18 @@ namespace SuppaServices.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseRouting();
+            app.UseRouting();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello World!");
-            //    });
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
+            });
 
             app.UseJsonRpc("",
-                conf => conf.ExposeAssemblyContaining<Startup>()
-                    .Where(TypesThat.AreInTheSameNamespaceAs<BitmapService>()));
-
+                api => api.ExposeAssemblyContaining<Startup>().Where(TypesThat.AreInTheSameNamespaceAs<BitmapService>()));
         }
     }
 }
