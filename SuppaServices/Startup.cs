@@ -1,9 +1,11 @@
+using System.Transactions;
 using EasyRpc.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SuppaServices.Server.Filter;
 using SuppaServices.Server.Services;
 
 namespace SuppaServices.Server
@@ -25,18 +27,12 @@ namespace SuppaServices.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
+            app.UseJsonRpc("/",
+                api =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    api.ApplyFilter<TransactionFilter>();
+                    api.ExposeAssemblyContaining<Startup>().Where(TypesThat.AreInTheSameNamespaceAs<BitmapService>());
                 });
-            });
-
-            app.UseJsonRpc("",
-                api => api.ExposeAssemblyContaining<Startup>().Where(TypesThat.AreInTheSameNamespaceAs<BitmapService>()));
         }
     }
 }
