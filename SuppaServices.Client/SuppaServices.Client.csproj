@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.DynamicClient.Grace" Version="4.0.0-Beta1104" />
+    <PackageReference Include="EasyRpc.DynamicClient.Grace" Version="4.0.0-Beta1107" />
   </ItemGroup>
 
   <ItemGroup>
