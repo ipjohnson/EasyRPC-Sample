@@ -22,6 +22,7 @@ namespace SuppaServices.Client
 
             var bytes = await File.ReadAllBytesAsync("sample.png");
             var response = await service.Create(bytes, 90);
+            await File.WriteAllBytesAsync("rotated.png", response);
         }
     }
 }
