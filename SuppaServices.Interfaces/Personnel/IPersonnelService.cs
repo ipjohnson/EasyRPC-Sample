@@ -7,7 +7,7 @@ namespace SuppaServices.Interfaces.Personnel
 {
     public interface IPersonnelService
     {
-        Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries();
+        Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries(string searchString);
 
         Task<PersonnelEntry> GetPersonnelEntry(int personnelId);
 

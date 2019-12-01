@@ -1,36 +1,51 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Windows.Web.Syndication;
 using ReactiveUI;
 using SuppaServices.Interfaces;
+using SuppaServices.Interfaces.Personnel;
 using Zafiro.Core;
 
 namespace SuppaServices.Uwp
 {
     public class MainViewModel : ReactiveObject
     {
-        private float angle;
-        private readonly ObservableAsPropertyHelper<byte[]> destination;
-        private readonly ObservableAsPropertyHelper<byte[]> source;
-        private readonly ObservableAsPropertyHelper<bool> isLoading;
+        private string _searchString;
+        private readonly IPersonnelService _personnelService;
 
-        public MainViewModel(IBitmapService bitmapService, IFilePicker filePicker)
+        private ObservableAsPropertyHelper<IEnumerable<PersonnelListEntry>> _personnelList;
+
+        public MainViewModel(IPersonnelService personnelService, IFilePicker filePicker)
         {
+            _personnelService = personnelService;
             BrowseFile = ReactiveCommand
                 .CreateFromObservable(() => filePicker.Pick("Select an image", new[] {".png", ".jpg"})
                     .Where(file => file != null)
                     .SelectMany(x => Observable.FromAsync(() => ToBytes(x))));
-            Rotate = ReactiveCommand.CreateFromTask(() => bitmapService.Create(Source, Angle), BrowseFile.Any());
+            
+            _personnelList = this
+                .WhenAnyValue(x => x.SearchString)
+                .Throttle(TimeSpan.FromMilliseconds(800))
+                .Select(term => term?.Trim())
+                .DistinctUntilChanged()
+                .Where(term => !string.IsNullOrWhiteSpace(term))
+                .SelectMany(SearchPersonnel)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToProperty(this, x => x.PersonnelList);
 
-            source = BrowseFile.ToProperty(this, x => x.Source);
-            destination = Rotate.ToProperty(this, x => x.Destination);
-            Angle = 90f;
 
-            isLoading = Rotate.IsExecuting.ToProperty(this, x => x.IsLoading);
         }
 
-        public bool IsLoading => isLoading.Value;
+        private async Task<IEnumerable<PersonnelListEntry>> SearchPersonnel(string searchString)
+        {
+            return await _personnelService.GetPersonnelListEntries(searchString);
+        }
+
+        public bool IsLoading => false;
 
         public ReactiveCommand<Unit, byte[]> BrowseFile { get; }
         
@@ -41,18 +56,14 @@ namespace SuppaServices.Uwp
                 return await stream.ReadBytes();
             }
         }
-
-
-        public ReactiveCommand<Unit, byte[]> Rotate { get; }
-
-        public float Angle
+        
+        public string SearchString
         {
-            get => angle;
-            set => this.RaiseAndSetIfChanged(ref angle, value);
+            get => _searchString;
+            set => this.RaiseAndSetIfChanged(ref _searchString, value);
         }
 
-        public byte[] Source => source.Value;
+        public IEnumerable<PersonnelListEntry> PersonnelList => _personnelList.Value;
 
-        public byte[] Destination => destination.Value;
     }
 }

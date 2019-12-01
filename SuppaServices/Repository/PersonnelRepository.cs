@@ -10,7 +10,7 @@ namespace SuppaServices.Server.Repository
 {
     public interface IPersonnelRepository
     {
-        Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries();
+        Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries(string searchString);
 
         Task<PersonnelEntry> GetPersonnelEntry(int personnelId);
 
@@ -28,11 +28,11 @@ namespace SuppaServices.Server.Repository
             _connectionManager = connectionManager;
         }
 
-        public async Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries()
+        public async Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries(string searchString)
         {
             using var _ = _connectionManager.GetConnection();
 
-            return await _.Connection.QueryAsync<PersonnelListEntry>("SELECT PersonnelId, FirstName, LastName FROM Personnel;");
+            return await _.Connection.QueryAsync<PersonnelListEntry>("SELECT PersonnelId, FirstName, LastName FROM Personnel WHERE LastName LIKE @searchString || '%' OR FirstName LIKE @searchString || '%';", new { searchString });
         }
 
         public async Task<PersonnelEntry> GetPersonnelEntry(int personnelId)

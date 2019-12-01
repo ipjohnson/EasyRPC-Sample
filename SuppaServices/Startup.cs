@@ -90,7 +90,7 @@ namespace SuppaServices.Server
         {
             var personnelRepository = scope.ServiceProvider.GetService<IPersonnelRepository>();
 
-            if ((await personnelRepository.GetPersonnelListEntries()).Any())
+            if ((await personnelRepository.GetPersonnelListEntries("")).Any())
             {
                 return;
             }

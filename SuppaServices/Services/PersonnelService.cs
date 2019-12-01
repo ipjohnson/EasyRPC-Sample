@@ -10,16 +10,16 @@ namespace SuppaServices.Server.Services
 {
     public class PersonnelService : IPersonnelService
     {
-        private IPersonnelRepository _personnelRepository;
+        private readonly IPersonnelRepository _personnelRepository;
 
         public PersonnelService(IPersonnelRepository personnelRepository)
         {
             _personnelRepository = personnelRepository;
         }
 
-        public Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries()
+        public Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries(string searchString)
         {
-            return _personnelRepository.GetPersonnelListEntries();
+            return _personnelRepository.GetPersonnelListEntries(searchString);
         }
 
         public Task<PersonnelEntry> GetPersonnelEntry(int personnelId)
