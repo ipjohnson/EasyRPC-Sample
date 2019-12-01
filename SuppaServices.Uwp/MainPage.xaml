@@ -30,7 +30,7 @@
             <StackPanel Spacing="10" Orientation="Horizontal">
                 <Button Content="Browse image…" Command="{Binding BrowseFile}" Margin="0 10" />
                 <Button Content="Rotate" Command="{Binding Rotate}" Margin="0 10" />
-                <TextBox Header="Angle" Text="{Binding Angle}" />
+                <TextBox Header="Angle" Text="{Binding Angle,Mode=TwoWay}" />
             </StackPanel>
 
             <controls:HeaderedContentControl Grid.Row="1" Grid.Column="0" Header="Source image">

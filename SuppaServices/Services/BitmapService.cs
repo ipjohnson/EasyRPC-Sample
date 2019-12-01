@@ -13,7 +13,7 @@ namespace SuppaServices.Server.Services
             var stream = new MemoryStream(imageBytes);
             var image = SixLabors.ImageSharp.Image.Load(stream);
             image.Mutate(x => x.Rotate(rotation));
-
+            
             var outputStream = new MemoryStream();
             image.Save(outputStream, new PngEncoder());
             return Task.FromResult(outputStream.GetBuffer());

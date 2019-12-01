@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="EasyRpc.DynamicClient.Grace" Version="4.0.0-Beta1107" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>

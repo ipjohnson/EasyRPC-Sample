@@ -5,13 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.AspNetCore" Version="4.0.0-Beta1107" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="EasyRpc.AspNetCore" Version="4.0.0-Beta1109" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="3.0.1" />
+    <PackageReference Include="SimpleFixture" Version="3.0.6" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SuppaServices.Interfaces\SuppaServices.Interfaces.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>
