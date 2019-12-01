@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using SuppaServices.Interfaces.Personnel;
+using SuppaServices.Server.DataAccess;
 
-namespace SuppaServices.Server.DataAccess
+namespace SuppaServices.Server.Repository
 {
     public interface IPersonnelRepository
     {
@@ -29,31 +30,31 @@ namespace SuppaServices.Server.DataAccess
 
         public async Task<IEnumerable<PersonnelListEntry>> GetPersonnelListEntries()
         {
-            using var c = _connectionManager.GetConnection();
+            using var _ = _connectionManager.GetConnection();
 
-            return await c.Connection.QueryAsync<PersonnelListEntry>("SELECT PersonnelId, FirstName, LastName FROM Personnel");
+            return await _.Connection.QueryAsync<PersonnelListEntry>("SELECT PersonnelId, FirstName, LastName FROM Personnel;");
         }
 
         public async Task<PersonnelEntry> GetPersonnelEntry(int personnelId)
         {
-            using var c = _connectionManager.GetConnection();
+            using var _ = _connectionManager.GetConnection();
 
-            return await c.Connection.QueryFirstAsync<PersonnelEntry>("SELECT * FROM Personnel WHERE PersonnelId = @personnelId", new { personnelId });
+            return await _.Connection.QueryFirstAsync<PersonnelEntry>("SELECT * FROM Personnel WHERE PersonnelId = @personnelId;", new { personnelId });
         }
 
         public async Task<int> AddPersonnelEntry(PersonnelEntry personnelEntry)
         {
-            using var c = _connectionManager.GetConnection();
+            using var _ = _connectionManager.GetConnection(transactionRequired: true);
 
-            return await c.Connection.QuerySingleAsync<int>(
-                "INSERT INTO Personnel VALUES (NULL, @FirstName,@LastName,@DateOfBirth,@EmploymentDate); SELECT last_insert_rowid();", personnelEntry, c.Transaction);
+            return await _.Connection.QuerySingleAsync<int>(
+                "INSERT INTO Personnel VALUES (NULL, @FirstName, @LastName, @DateOfBirth, @EmploymentDate); SELECT last_insert_rowid();", personnelEntry, _.Transaction);
         }
 
         public async Task UpdatePersonnelEntry(PersonnelEntry personnelEntry)
         {
-            using var _ = _connectionManager.GetConnection();
+            using var _ = _connectionManager.GetConnection(transactionRequired: true);
 
-            await _.Connection.ExecuteAsync("UPDATE Personnel SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, EmploymentDate = @EmploymentDate WHERE PersonnelId = @PersonnelId", personnelEntry, _.Transaction);
+            await _.Connection.ExecuteAsync("UPDATE Personnel SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, EmploymentDate = @EmploymentDate WHERE PersonnelId = @PersonnelId;", personnelEntry, _.Transaction);
         }
     }
 }

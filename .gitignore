@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /SuppaServices/personnel.db
 /SuppaServices/hello.db
+*.db

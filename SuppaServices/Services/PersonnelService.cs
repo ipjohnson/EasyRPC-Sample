@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SuppaServices.Interfaces.Personnel;
 using SuppaServices.Server.DataAccess;
+using SuppaServices.Server.Repository;
 
 namespace SuppaServices.Server.Services
 {

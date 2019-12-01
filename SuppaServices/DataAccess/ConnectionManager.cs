@@ -10,30 +10,18 @@ using SuppaServices.Server.Configuration;
 
 namespace SuppaServices.Server.DataAccess
 {
-    public interface IConnectionManager
-    {
-        IDbConnectionWrapper GetConnection(string connectionName = "main");
-
-        void BeginTransaction();
-
-        void CommitTransaction();
-
-        void RollbackTransaction();
-    }
-
     public class ConnectionManager : IConnectionManager
     {
         private Dictionary<string, ConnectionWrapper> _knownConnections;
-        private IOptions<ConnectionStrings> _connectionStrings;
-        private IConnectionFactory _connectionFactory;
+        private readonly IOptions<ConnectionStrings> _connectionStrings;
+        private readonly IConnectionFactory _connectionFactory;
 
         public ConnectionManager(IOptions<ConnectionStrings> connectionStrings, IConnectionFactory connectionFactory)
         {
             _connectionStrings = connectionStrings;
             _connectionFactory = connectionFactory;
         }
-
-        public IDbConnectionWrapper GetConnection(string connectionName)
+        public IDbConnectionWrapper GetConnection(string connectionName = "main", bool? transactionRequired = null)
         {
             if (_knownConnections != null)
             {
@@ -72,6 +60,10 @@ namespace SuppaServices.Server.DataAccess
                     throw;
                 }
             }
+            else if (transactionRequired.GetValueOrDefault(false))
+            {
+                throw new Exception("Required transaction was not found, make sure top level service method has a [Transaction] attribute");
+            }
             else
             {
                 var connectionString = "";
@@ -90,6 +82,7 @@ namespace SuppaServices.Server.DataAccess
                 return new ConnectionWrapper(connection, null, true);
             }
         }
+
 
         public void BeginTransaction()
         {
@@ -129,7 +122,7 @@ namespace SuppaServices.Server.DataAccess
                     }
                     catch (Exception e)
                     {
-
+                        // probably want to log this
                     }
                     finally
                     {

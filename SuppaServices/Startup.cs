@@ -17,6 +17,7 @@ using SuppaServices.Interfaces.Personnel;
 using SuppaServices.Server.Configuration;
 using SuppaServices.Server.DataAccess;
 using SuppaServices.Server.Filter;
+using SuppaServices.Server.Repository;
 using SuppaServices.Server.Services;
 
 namespace SuppaServices.Server
